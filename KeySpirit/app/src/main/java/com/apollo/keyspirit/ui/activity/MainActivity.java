@@ -1,16 +1,12 @@
 package com.apollo.keyspirit.ui.activity;
 
-import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
-import android.os.Build;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.os.Bundle;
-import android.support.annotation.RequiresApi;
 import android.text.TextUtils;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
@@ -35,25 +31,18 @@ import com.apollo.keyspirit.util.AppUtil;
 import com.apollo.keyspirit.util.LogUtil;
 import com.apollo.keyspirit.util.MyPopUtil;
 import com.apollo.keyspirit.util.SharedPreferencesUtils;
-import com.apollo.keyspirit.util.ShellUtils;
 import com.apollo.keyspirit.util.SystemUtil;
 import com.apollo.keyspirit.util.TapEventUtil;
 import com.apollo.keyspirit.util.ToastUtil;
-import com.apollo.keyspirit.util.UIUtil;
 import com.google.gson.Gson;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
-import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.lang.ref.WeakReference;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -298,35 +287,6 @@ public class MainActivity extends BaseActivity {
 
 
     private void killAppBypackage(String packageTokill) {
-
-//        List<ApplicationInfo> packages;
-//        PackageManager pm;
-//        pm = getPackageManager();
-//        //get a list of installed apps.
-//        packages = pm.getInstalledApplications(0);
-//
-//
-//        ActivityManager mActivityManager = (ActivityManager) MainActivity.this.getSystemService(Context.ACTIVITY_SERVICE);
-//        String myPackage = getApplicationContext().getPackageName();
-//
-//        for (ApplicationInfo packageInfo : packages) {
-//
-//            if ((packageInfo.flags & ApplicationInfo.FLAG_SYSTEM) == 1) {
-//                continue;
-//            }
-//            if (packageInfo.packageName.equals(myPackage)) {
-//                continue;
-//            }
-//            if (packageInfo.packageName.equals(packageTokill)) {
-////                mActivityManager.killBackgroundProcesses(packageInfo.packageName);
-//                execRootCmdSilent("adb shell pm clear " + packageInfo.packageName);
-//                LogUtil.d("apollo", "杀死进程：" + packageInfo.packageName);
-//            }
-//
-//        }
-
-//        int result = execRootCmdSilent("adb shell am force-stop " + packageTokill+" \n");//注意命令最后加\n执行
-//        LogUtil.d("apollo", "杀死进程：" + packageTokill+"结果： "+result);
         if (!TextUtils.equals(packageTokill, packageName)
                 && !TextUtils.equals(packageTokill, MyApplication.getInstance().getPackageName())) {
             execRootCmdSilent("am force-stop " + packageTokill);
@@ -338,19 +298,6 @@ public class MainActivity extends BaseActivity {
 
     }
 
-    private void doExec(String cmd) {
-        List<String> cmds = new ArrayList<String>();
-        cmds.add("sh");
-        cmds.add("-c");
-        cmds.add(cmd);
-        ProcessBuilder pb = new ProcessBuilder(cmds);
-        try {
-            Process p = pb.start();
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-    }
 
     /**
      * 执行命令但不关注结果输出

@@ -1,6 +1,5 @@
 package com.apollo.keyspirit.ui.activity;
 
-import android.app.Activity;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
