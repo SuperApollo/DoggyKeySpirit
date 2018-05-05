@@ -35,6 +35,7 @@ import com.apollo.keyspirit.util.AppUtil;
 import com.apollo.keyspirit.util.LogUtil;
 import com.apollo.keyspirit.util.MyPopUtil;
 import com.apollo.keyspirit.util.SharedPreferencesUtils;
+import com.apollo.keyspirit.util.ShellUtils;
 import com.apollo.keyspirit.util.SystemUtil;
 import com.apollo.keyspirit.util.TapEventUtil;
 import com.apollo.keyspirit.util.ToastUtil;
@@ -45,8 +46,10 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
+import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.lang.ref.WeakReference;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -296,28 +299,41 @@ public class MainActivity extends BaseActivity {
 
     private void killAppBypackage(String packageTokill) {
 
-        List<ApplicationInfo> packages;
-        PackageManager pm;
-        pm = getPackageManager();
-        //get a list of installed apps.
-        packages = pm.getInstalledApplications(0);
+//        List<ApplicationInfo> packages;
+//        PackageManager pm;
+//        pm = getPackageManager();
+//        //get a list of installed apps.
+//        packages = pm.getInstalledApplications(0);
+//
+//
+//        ActivityManager mActivityManager = (ActivityManager) MainActivity.this.getSystemService(Context.ACTIVITY_SERVICE);
+//        String myPackage = getApplicationContext().getPackageName();
+//
+//        for (ApplicationInfo packageInfo : packages) {
+//
+//            if ((packageInfo.flags & ApplicationInfo.FLAG_SYSTEM) == 1) {
+//                continue;
+//            }
+//            if (packageInfo.packageName.equals(myPackage)) {
+//                continue;
+//            }
+//            if (packageInfo.packageName.equals(packageTokill)) {
+////                mActivityManager.killBackgroundProcesses(packageInfo.packageName);
+//                execRootCmdSilent("adb shell pm clear " + packageInfo.packageName);
+//                LogUtil.d("apollo", "杀死进程：" + packageInfo.packageName);
+//            }
+//
+//        }
 
-
-        ActivityManager mActivityManager = (ActivityManager) MainActivity.this.getSystemService(Context.ACTIVITY_SERVICE);
-        String myPackage = getApplicationContext().getPackageName();
-
-        for (ApplicationInfo packageInfo : packages) {
-
-            if ((packageInfo.flags & ApplicationInfo.FLAG_SYSTEM) == 1) {
-                continue;
-            }
-            if (packageInfo.packageName.equals(myPackage)) {
-                continue;
-            }
-            if (packageInfo.packageName.equals(packageTokill)) {
-                mActivityManager.killBackgroundProcesses(packageInfo.packageName);
-            }
-
+//        int result = execRootCmdSilent("adb shell am force-stop " + packageTokill+" \n");//注意命令最后加\n执行
+//        LogUtil.d("apollo", "杀死进程：" + packageTokill+"结果： "+result);
+        if (!TextUtils.equals(packageTokill, packageName)
+                && !TextUtils.equals(packageTokill, MyApplication.getInstance().getPackageName())) {
+            execRootCmdSilent("am force-stop " + packageTokill);
+            LogUtil.d("apollo", "杀死进程：" + packageTokill);
+//            String[] commands = new String[]{"am force-stop " + packageTokill};
+//            ShellUtils.CommandResult result = ShellUtils.execCommand(commands, true);
+//            LogUtil.d("apollo", "result: " + result.errorMsg + ":" + result.successMsg);
         }
 
     }
