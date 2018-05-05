@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="270dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_dialog_pop"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="90dp"
+            android:gravity="center_vertical"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:text="检测到新版本"
+                android:textColor="#222222"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/tv_new_update_num"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="4dp"
+                android:text="版本号:2.1.0"
+                android:textColor="#222222"
+                android:textSize="15sp" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="#d9d9d9" />
+
+        <LinearLayout
+            android:id="@+id/ll_new_update_description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/tv_new_update_description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:maxHeight="200dp"
+                android:padding="15dp"
+                android:scrollbars="vertical"
+                android:textColor="@color/grey"
+                android:textSize="18sp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="#d9d9d9" />
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tv_new_update_pop_cancel"
+                android:layout_width="0dp"
+                android:layout_height="45dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="取消"
+                android:textColor="#007aff"
+                android:textSize="17sp" />
+
+            <View
+                android:layout_width="0.5dp"
+                android:layout_height="match_parent"
+                android:background="#d9d9d9" />
+
+            <TextView
+                android:id="@+id/tv_new_update_pop_ok"
+                android:layout_width="0dp"
+                android:layout_height="45dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="升级"
+                android:textColor="#007aff"
+                android:textSize="17sp" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+</LinearLayout>

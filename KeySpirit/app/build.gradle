@@ -1,0 +1,61 @@
+apply plugin: 'com.android.application'
+
+android {
+
+    //打包输出 apk 名称
+    applicationVariants.all { variant ->
+        variant.outputs.all { output ->
+            if (variant.buildType.isDebuggable()) {
+                outputFileName = rootProject.ext.projectName + "_" + rootProject.ext.versionName + "_" + keySpiritTime() + "_debug.apk"
+            } else {
+                outputFileName = rootProject.ext.projectName + "_" + rootProject.ext.versionName + "_" + keySpiritTime() + "_release.apk"
+            }
+        }
+
+    }
+
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    defaultConfig {
+        applicationId rootProject.ext.applicationId
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
+        versionCode rootProject.ext.versionCode
+        versionName rootProject.ext.versionName
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+    buildTypes {
+        debug {
+            buildConfigField("boolean", "LOG_ENABLE", "true")
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        release {
+            buildConfigField("boolean", "LOG_ENABLE", rootProject.ext.enableLog)
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            //设置压缩对齐
+            zipAlignEnabled true
+            //移除无用的资源
+            shrinkResources true
+        }
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation 'com.android.support:appcompat-v7:26.1.0'
+    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'com.android.support.test:runner:1.0.1'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
+
+    implementation 'com.jakewharton:butterknife:8.8.1'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
+    implementation 'com.airbnb.android:lottie:2.5.4'
+    implementation 'com.squareup.retrofit2:retrofit:2.1.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.1.0'
+}
+
+def keySpiritTime() {
+    return new Date().format("yyyyMMddHHmmss", TimeZone.getTimeZone("GMT+08:00"))
+}

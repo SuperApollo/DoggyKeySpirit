@@ -1,0 +1,2 @@
+1.获取手机安装的第三方 APP 的包名
+    adb shell pm list packages -3

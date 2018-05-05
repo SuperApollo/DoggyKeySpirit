@@ -1,0 +1,43 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+    <!--自定义进度条的框-->
+    <attr name="progress_unreach_color" format="color" />
+    <attr name="progress_unreach_height" format="dimension" />
+    <attr name="progress_reach_color" format="color" />
+    <attr name="progress_reach_height" format="dimension" />
+    <attr name="progress_text_color" format="color" />
+    <attr name="progress_text_size" format="dimension" />
+    <attr name="progress_text_offset" format="dimension" />
+    <attr name="radius" format="dimension" />
+    <declare-styleable name="HorizontalProgressBar">
+        <attr name="progress_unreach_color" />
+        <attr name="progress_unreach_height" />
+        <attr name="progress_reach_color" />
+        <attr name="progress_reach_height" />
+    </declare-styleable>
+    <!--自定义对话框的样式-->
+    <style name="Dialog" parent="android:style/Theme.Dialog">
+        <item name="android:background">#00000000</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowIsFloating">true</item>
+    </style>
+    <!--添加弹出框文字样式-->
+    <style name="add_pop_tv_style">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginLeft">15dp</item>
+        <item name="android:layout_gravity">center_vertical</item>
+        <item name="android:layout_marginRight">15dp</item>
+        <item name="android:textColor">@color/text_black_color</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+</resources>

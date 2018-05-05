@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.activity.MainActivity">
+
+    <EditText
+        android:id="@+id/et_package_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="请输入app包名,如：com.netease.newsreader.activity"
+        android:textSize="12sp" />
+
+    <EditText
+        android:id="@+id/et_input_x"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="请输入点击的x坐标"
+        android:inputType="number"
+        android:textSize="12sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/et_input_y"
+        app:layout_constraintTop_toBottomOf="@+id/et_package_name" />
+
+    <EditText
+        android:id="@+id/et_input_y"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="请输入点击的y坐标"
+        android:inputType="number"
+        android:textSize="12sp"
+        app:layout_constraintLeft_toRightOf="@+id/et_input_x"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/et_package_name" />
+
+    <EditText
+        android:id="@+id/et_input_swipe_H"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="请输入垂直方向滑动距离"
+        android:inputType="number"
+        android:textSize="12sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/et_input_swipe_W"
+        app:layout_constraintTop_toBottomOf="@+id/et_input_x" />
+
+    <EditText
+        android:id="@+id/et_input_swipe_W"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="请输入水平方向滑动距离"
+        android:inputType="number"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="@+id/et_input_swipe_H"
+        app:layout_constraintLeft_toRightOf="@+id/et_input_swipe_H"
+        app:layout_constraintRight_toRightOf="parent" />
+
+    <Button
+        android:id="@+id/btn_start"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="开始"
+        app:layout_constraintTop_toBottomOf="@+id/et_input_swipe_H" />
+
+    <Button
+        android:id="@+id/btn_stop"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:text="停止"
+        app:layout_constraintBottom_toBottomOf="@+id/btn_start"
+        app:layout_constraintLeft_toRightOf="@+id/btn_start" />
+
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/animation_top_test"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:lottie_fileName="newcomer_reward_top.json"
+        app:lottie_imageAssetsFolder="images/" />
+
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/animation_after_test"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/animation_top_test"
+        app:lottie_fileName="newcomer_reward_after.json"
+        app:lottie_imageAssetsFolder="images/" />
+
+    <Button
+        android:id="@+id/btn_next_page"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:text="下一页"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="@+id/btn_stop"
+        app:layout_constraintLeft_toRightOf="@+id/btn_stop" />
+
+    <Button
+        android:id="@+id/btn_to_surface"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:text="surfaceview"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="@+id/btn_next_page"
+        app:layout_constraintLeft_toRightOf="@+id/btn_next_page" />
+
+</android.support.constraint.ConstraintLayout>
