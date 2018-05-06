@@ -46,4 +46,20 @@ public interface Constants {
      * 折扣猎手在应用宝缩略图地址
      */
     String zkls_tencent_pic = "http://pp.myapp.com/ma_icon/0/icon_52415166_1492676694/96";
+    /**
+     * 广播 action
+     */
+    String MY_BROADCUST_RECEIVER_ACTION = "my_broadcust_receiver_action";
+    /**
+     *  MainActivity 给 SwipeService 发的命令广播
+     */
+    String BROADCUST_COMMAND = "broadcust_command";
+    /**
+     * 开始命令
+     */
+    String COMMAND_START = "command_start";
+    /**
+     * 停止命令
+     */
+    String COMMAND_STOP = "command_stop";
 }

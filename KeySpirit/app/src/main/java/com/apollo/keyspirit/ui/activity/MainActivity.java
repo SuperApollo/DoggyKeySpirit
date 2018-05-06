@@ -26,6 +26,7 @@ import com.apollo.keyspirit.app.AppConfig;
 import com.apollo.keyspirit.app.MyApplication;
 import com.apollo.keyspirit.constants.Constants;
 import com.apollo.keyspirit.retrofit.model.AppUpdateInfoModel;
+import com.apollo.keyspirit.service.SwipeService;
 import com.apollo.keyspirit.util.ApkUpdateUtil;
 import com.apollo.keyspirit.util.AppUtil;
 import com.apollo.keyspirit.util.LogUtil;
@@ -72,7 +73,7 @@ public class MainActivity extends BaseActivity {
     private final int NO_UPDATE = 0x00010088;
 
 
-    MyHandler mHandler = new MyHandler(this);
+//    MyHandler mHandler = new MyHandler(this);
     private static final int LAUNCH_APP = 0x01;
     private static final int EXEC_SWIPE_ITEM = 0x02;//滑动列表
     private static final int EXEC_TAP_ITEM = 0x03;//点击新闻列表条目
@@ -100,6 +101,9 @@ public class MainActivity extends BaseActivity {
 //        test();
         swipeH = -SystemUtil.dp2px(MyApplication.getInstance().getContext(), 133);
         swipeW = SystemUtil.dp2px(MyApplication.getInstance().getContext(), 66);
+
+        Intent intent = new Intent(this, SwipeService.class);
+        startService(intent);
     }
 
     /**
@@ -136,17 +140,21 @@ public class MainActivity extends BaseActivity {
             ToastUtil.show("啊哦，您的手机似乎没有 root 权限！");
             return;
         }
-        handleInput();
-        //清空之前的消息
-        mHandler.removeCallbacksAndMessages(null);
-        Message msg = Message.obtain();
-        msg.what = LAUNCH_APP;
-        mHandler.sendMessageDelayed(msg, 3000);
-        //复位
-        stopSwipeAndTap = false;
-        swipTimes = 0;
-        tapTimes = 0;
-        detailSwipeTimes = 0;
+//        handleInput();
+//        //清空之前的消息
+//        mHandler.removeCallbacksAndMessages(null);
+//        Message msg = Message.obtain();
+//        msg.what = LAUNCH_APP;
+//        mHandler.sendMessageDelayed(msg, 3000);
+//        //复位
+//        stopSwipeAndTap = false;
+//        swipTimes = 0;
+//        tapTimes = 0;
+//        detailSwipeTimes = 0;
+
+        Intent intent = new Intent(Constants.MY_BROADCUST_RECEIVER_ACTION);
+        intent.putExtra(Constants.BROADCUST_COMMAND, Constants.COMMAND_START);
+        sendBroadcast(intent);
     }
 
     @OnClick(R.id.btn_next_page)
@@ -202,7 +210,11 @@ public class MainActivity extends BaseActivity {
 
     @OnClick(R.id.btn_stop)
     public void stop() {
-        stopSwipeAndTap = true;
+//        stopSwipeAndTap = true;
+
+        Intent intent = new Intent(Constants.MY_BROADCUST_RECEIVER_ACTION);
+        intent.putExtra(Constants.BROADCUST_COMMAND, Constants.COMMAND_STOP);
+        sendBroadcast(intent);
     }
 
     /**
@@ -331,95 +343,95 @@ public class MainActivity extends BaseActivity {
         return result;
     }
 
-    private static class MyHandler extends Handler {
-        private final WeakReference<MainActivity> mActivity;
-
-        public MyHandler(MainActivity activity) {
-            this.mActivity = new WeakReference<>(activity);
-        }
-
-        @Override
-        public void handleMessage(Message msg) {
-            boolean isRunning = mActivity.get().checkRunningApp();
-            switch (msg.what) {
-                case LAUNCH_APP:
-                    mActivity.get().launchAppFromPackageName(mActivity.get().packageName);
-                    ToastUtil.show("成功打开 " + mActivity.get().packageName);
-                    removeCallbacksAndMessages(null);
-                    Message msg1 = Message.obtain();
-                    msg1.what = EXEC_SWIPE_ITEM;
-                    sendMessageDelayed(msg1, 10000);
-                    break;
-                case EXEC_SWIPE_ITEM:
-                    if (!isRunning)
-                        break;
-                    mActivity.get().execSwipeH();
-                    ToastUtil.show("第" + mActivity.get().swipTimes + "次滑动" + mActivity.get().swipeH + "像素");
-                    mActivity.get().swipTimes++;
-                    if (!mActivity.get().stopSwipeAndTap) {
-                        removeCallbacksAndMessages(null);
-                        Message msg2 = Message.obtain();
-                        msg2.what = EXEC_TAP_ITEM;
-                        sendMessageDelayed(msg2, 2000);
-                    }
-                    break;
-                case EXEC_SWIPE_DETAIL:
-                    if (!isRunning)
-                        break;
-                    mActivity.get().execSwipeH();
-                    ToastUtil.show("第" + mActivity.get().detailSwipeTimes + "次新闻详情滑动");
-                    mActivity.get().detailSwipeTimes++;
-                    if (!mActivity.get().stopSwipeAndTap) {
-                        removeCallbacksAndMessages(null);
-                        Message msg4 = Message.obtain();
-                        int detailSwipeTimes = mActivity.get().detailSwipeTimes;
-                        if (detailSwipeTimes != 0 && detailSwipeTimes % 15 != 0) {//滑动新闻详情页不到15次
-                            msg4.what = EXEC_SWIPE_DETAIL;
-                        } else {
-                            mActivity.get().detailSwipeTimes = 0;//复位
-                            msg4.what = EXEC_TAP_BACK;
-                        }
-                        sendMessageDelayed(msg4, 1500);
-                    }
-                    break;
-                case EXEC_TAP_ITEM:
-                    if (!isRunning)
-                        break;
-                    mActivity.get().checkRunningApp();
-                    mActivity.get().execTapItem();
-                    ToastUtil.show("第" + mActivity.get().tapTimes + "次点击");
-                    mActivity.get().tapTimes++;
-                    if (!mActivity.get().stopSwipeAndTap) {
-                        removeCallbacksAndMessages(null);
-                        Message msg3 = Message.obtain();
-                        msg3.what = EXEC_SWIPE_DETAIL;
-                        sendMessageDelayed(msg3, 2000);
-                    }
-                    break;
-                case EXEC_TAP_BACK:
-                    if (!isRunning)
-                        break;
-                    mActivity.get().checkRunningApp();
-                    Message msg5 = Message.obtain();
-                    mActivity.get().execTapBack();
-                    ToastUtil.show("点击返回");
-                    mActivity.get().tapbackTimes++;
-                    if (mActivity.get().tapbackTimes <= 1) {//点两次返回键，防止文字选中状态返回不了
-                        msg5.what = EXEC_TAP_BACK;
-                    } else {
-                        mActivity.get().tapbackTimes = 0;
-                        if (!mActivity.get().stopSwipeAndTap) {
-                            removeCallbacksAndMessages(null);
-                            msg5.what = EXEC_SWIPE_ITEM;
-                        }
-                    }
-                    sendMessageDelayed(msg5, 2000);
-                    break;
-
-            }
-        }
-
-    }
+//    private static class MyHandler extends Handler {
+//        private final WeakReference<MainActivity> mActivity;
+//
+//        public MyHandler(MainActivity activity) {
+//            this.mActivity = new WeakReference<>(activity);
+//        }
+//
+//        @Override
+//        public void handleMessage(Message msg) {
+//            boolean isRunning = mActivity.get().checkRunningApp();
+//            switch (msg.what) {
+//                case LAUNCH_APP:
+//                    mActivity.get().launchAppFromPackageName(mActivity.get().packageName);
+//                    ToastUtil.show("成功打开 " + mActivity.get().packageName);
+//                    removeCallbacksAndMessages(null);
+//                    Message msg1 = Message.obtain();
+//                    msg1.what = EXEC_SWIPE_ITEM;
+//                    sendMessageDelayed(msg1, 10000);
+//                    break;
+//                case EXEC_SWIPE_ITEM:
+//                    if (!isRunning)
+//                        break;
+//                    mActivity.get().execSwipeH();
+//                    ToastUtil.show("第" + mActivity.get().swipTimes + "次滑动" + mActivity.get().swipeH + "像素");
+//                    mActivity.get().swipTimes++;
+//                    if (!mActivity.get().stopSwipeAndTap) {
+//                        removeCallbacksAndMessages(null);
+//                        Message msg2 = Message.obtain();
+//                        msg2.what = EXEC_TAP_ITEM;
+//                        sendMessageDelayed(msg2, 2000);
+//                    }
+//                    break;
+//                case EXEC_SWIPE_DETAIL:
+//                    if (!isRunning)
+//                        break;
+//                    mActivity.get().execSwipeH();
+//                    ToastUtil.show("第" + mActivity.get().detailSwipeTimes + "次新闻详情滑动");
+//                    mActivity.get().detailSwipeTimes++;
+//                    if (!mActivity.get().stopSwipeAndTap) {
+//                        removeCallbacksAndMessages(null);
+//                        Message msg4 = Message.obtain();
+//                        int detailSwipeTimes = mActivity.get().detailSwipeTimes;
+//                        if (detailSwipeTimes != 0 && detailSwipeTimes % 15 != 0) {//滑动新闻详情页不到15次
+//                            msg4.what = EXEC_SWIPE_DETAIL;
+//                        } else {
+//                            mActivity.get().detailSwipeTimes = 0;//复位
+//                            msg4.what = EXEC_TAP_BACK;
+//                        }
+//                        sendMessageDelayed(msg4, 1500);
+//                    }
+//                    break;
+//                case EXEC_TAP_ITEM:
+//                    if (!isRunning)
+//                        break;
+//                    mActivity.get().checkRunningApp();
+//                    mActivity.get().execTapItem();
+//                    ToastUtil.show("第" + mActivity.get().tapTimes + "次点击");
+//                    mActivity.get().tapTimes++;
+//                    if (!mActivity.get().stopSwipeAndTap) {
+//                        removeCallbacksAndMessages(null);
+//                        Message msg3 = Message.obtain();
+//                        msg3.what = EXEC_SWIPE_DETAIL;
+//                        sendMessageDelayed(msg3, 2000);
+//                    }
+//                    break;
+//                case EXEC_TAP_BACK:
+//                    if (!isRunning)
+//                        break;
+//                    mActivity.get().checkRunningApp();
+//                    Message msg5 = Message.obtain();
+//                    mActivity.get().execTapBack();
+//                    ToastUtil.show("点击返回");
+//                    mActivity.get().tapbackTimes++;
+//                    if (mActivity.get().tapbackTimes <= 1) {//点两次返回键，防止文字选中状态返回不了
+//                        msg5.what = EXEC_TAP_BACK;
+//                    } else {
+//                        mActivity.get().tapbackTimes = 0;
+//                        if (!mActivity.get().stopSwipeAndTap) {
+//                            removeCallbacksAndMessages(null);
+//                            msg5.what = EXEC_SWIPE_ITEM;
+//                        }
+//                    }
+//                    sendMessageDelayed(msg5, 2000);
+//                    break;
+//
+//            }
+//        }
+//
+//    }
 
     private class CheckUpdateTask extends AsyncTask {
         @Override
@@ -613,10 +625,10 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (mHandler != null) {
-            mHandler.removeCallbacksAndMessages(null);
-            mHandler = null;
-        }
+//        if (mHandler != null) {
+//            mHandler.removeCallbacksAndMessages(null);
+//            mHandler = null;
+//        }
     }
 
 

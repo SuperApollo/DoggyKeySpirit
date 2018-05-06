@@ -1,9 +1,12 @@
 package com.apollo.keyspirit.service;
 
 import android.app.Service;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
@@ -14,6 +17,7 @@ import android.view.View;
 import android.view.WindowManager;
 
 import com.apollo.keyspirit.app.MyApplication;
+import com.apollo.keyspirit.constants.Constants;
 import com.apollo.keyspirit.util.LogUtil;
 import com.apollo.keyspirit.util.SystemUtil;
 import com.apollo.keyspirit.util.TapEventUtil;
@@ -30,6 +34,7 @@ public class SwipeService extends Service {
     final String TAG = this.getClass().getSimpleName();
 
     MyHandler mHandler = new MyHandler(this);
+    MyBroadcustReceiver mReceiver = new MyBroadcustReceiver();
     private static final int LAUNCH_APP = 0x01;
     private static final int EXEC_SWIPE_ITEM = 0x02;//滑动列表
     private static final int EXEC_TAP_ITEM = 0x03;//点击新闻列表条目
@@ -55,6 +60,7 @@ public class SwipeService extends Service {
         super.onCreate();
         swipeH = -SystemUtil.dp2px(MyApplication.getInstance().getContext(), 133);
         swipeW = SystemUtil.dp2px(MyApplication.getInstance().getContext(), 66);
+        registerReceiver(mReceiver, new IntentFilter(Constants.MY_BROADCUST_RECEIVER_ACTION));
     }
 
     @Nullable
@@ -75,9 +81,10 @@ public class SwipeService extends Service {
             mHandler.removeCallbacksAndMessages(null);
             mHandler = null;
         }
+        unregisterReceiver(mReceiver);
     }
 
-    public void start() {
+    private void start() {
         //清空之前的消息
         mHandler.removeCallbacksAndMessages(null);
         Message msg = Message.obtain();
@@ -88,10 +95,13 @@ public class SwipeService extends Service {
         swipTimes = 0;
         tapTimes = 0;
         detailSwipeTimes = 0;
+        ToastUtil.show("开始狗只服务");
     }
 
-    public void stop() {
+    private void stop() {
         stopSwipeAndTap = true;
+        stopSelf();
+        ToastUtil.show("停止狗只服务");
     }
 
     /**
@@ -306,5 +316,20 @@ public class SwipeService extends Service {
             }
         }
 
+    }
+
+    //==========================广播===================================
+    private class MyBroadcustReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String command = intent.getStringExtra(Constants.BROADCUST_COMMAND);
+            if (TextUtils.equals(command, Constants.COMMAND_START)) {
+                start();
+            } else if (TextUtils.equals(command, Constants.COMMAND_STOP)) {
+                stop();
+            }
+
+        }
     }
 }
